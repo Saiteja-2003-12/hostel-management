@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Management System</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://th.bing.com/th/id/OIP.UY0vt0ARKbq0EsA_-C4nVQHaE7?rs=1&pid=ImgDetMain'); 
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #0044cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #003399;
+        }
+
+        .room-list, .student-list {
+            margin-top: 20px;
+            text-align: left;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .card {
+            background: #f1f1f1;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .error {
+            color: red;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hostel Management System</h1>
+
+        <div id="error-message" class="error"></div>
+
+        <div>
+            <input type="text" id="studentName" placeholder="Student Name" required>
+            <input type="number" id="roomNumber" placeholder="Room Number" required>
+            <button onclick="assignRoom()">Assign Room</button>
+        </div>
+
+        <h2>Assigned Rooms</h2>
+        <div class="room-list" id="roomList"></div>
+
+        <h2>Student List</h2>
+        <div class="student-list" id="studentList"></div>
+    </div>
+
+    <script>
+       
+        let roomAssignments = [];
+        let students = [];
+
+        function assignRoom() {
+            const studentName = document.getElementById('studentName').value.trim();
+            const roomNumber = document.getElementById('roomNumber').value.trim();
+
+            
+            document.getElementById('error-message').textContent = '';
+
+        
+            if (studentName === '' || roomNumber === '') {
+                document.getElementById('error-message').textContent = 'Please fill out both fields.';
+                return;
+            }
+
+          
+            const roomExists = roomAssignments.some(room => room.roomNumber === roomNumber);
+            if (roomExists) {
+                document.getElementById('error-message').textContent = 'Room already assigned to another student.';
+                return;
+            }
+
+            
+            const student = {
+                name: studentName,
+                roomNumber: roomNumber
+            };
+            students.push(student);
+
+           
+            roomAssignments.push({
+                studentName: studentName,
+                roomNumber: roomNumber
+            });
+
+           
+            displayRoomAssignments();
+            displayStudentList();
+
+           
+            document.getElementById('studentName').value = '';
+            document.getElementById('roomNumber').value = '';
+        }
+
+        function displayRoomAssignments() {
+            const roomList = document.getElementById('roomList');
+            roomList.innerHTML = '';
+
+            roomAssignments.forEach(room => {
+                const roomCard = document.createElement('div');
+                roomCard.classList.add('card');
+                roomCard.innerHTML = `Room ${room.roomNumber} assigned to ${room.studentName}`;
+                roomList.appendChild(roomCard);
+            });
+        }
+
+        function displayStudentList() {
+            const studentList = document.getElementById('studentList');
+            studentList.innerHTML = '';
+
+            students.forEach(student => {
+                const studentCard = document.createElement('div');
+                studentCard.classList.add('card');
+                studentCard.innerHTML = `${student.name} (Room ${student.roomNumber})`;
+                studentList.appendChild(studentCard);
+            });
+        }
+    </script>
+</body>
+</html>
